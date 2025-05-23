@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <style type="text/css">
+    .bs-example {
+      margin: 0px;
+
+    }
+    .bg-dark {
+    background-color: #212529!important;
+}
+    .navbar-brand {
+      font-size: 20px;
+      font-family: sans-serif;
+
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+  <div class="bs-example">
+    <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background-color: #212529;">
+    <a style="color: #ffffff;text-decoration: none; " href="/"><font face = "verdana" size =" 5"><img src="data:image/png;base64,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" alt="Logo" style="height: 50px; margin-left: 10px;"> Recruitment Portal</font><br />
+      </a>  
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+        <div class="navbar-nav">
+    
+        </div>
+
+        <div class="navbar-nav">
+          
+         <a href="/admin" class="nav-item nav-link">Admin</a>
+          
+          
+        </div>
+
+
+
+
+      </div>
+    </nav>
+  </div>
+
+
+</body>
+
+</html>

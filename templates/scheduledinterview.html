@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Scheduled Interviews</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background: #f9f9f9; }
+    h2 { color: #024b4c; }
+    .role-list {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .role-card {
+      background-color: #ffffff;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      font-weight: bold;
+      color: #024b4c;
+      transition: 0.3s;
+    }
+    .role-card:hover {
+      background-color: #e6f7f8;
+      transform: scale(1.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #024b4c;
+      color: white;
+    }
+    input.remark-input {
+      width: 100%;
+      padding: 6px;
+    }
+    .back-link {
+      margin-top: 20px;
+      display: inline-block;
+      text-decoration: none;
+      color: #024b4c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Scheduled Interviews</h2>
+
+  <div class="role-list">
+    <div class="role-card" onclick="loadInterviews('telecaller')">Telecaller</div>
+    <div class="role-card" onclick="loadInterviews('counselor')">Counselor</div>
+    <div class="role-card" onclick="loadInterviews('trainer')">Trainer</div>
+    <div class="role-card" onclick="loadInterviews('hr')">HR</div>
+  </div>
+
+  <div id="tableSection">
+    <!-- Interview table will be injected here -->
+  </div>
+
+  <a href="{% url 'recruitment' %}" class="back-link">← Back to Dashboard</a>
+
+  <script>
+    let currentRole = null;
+
+    function loadInterviews(role) {
+      currentRole = role;
+      fetch(`/api/scheduledinterviews/${role}/`)
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById("tableSection");
+
+          if (data.length === 0) {
+            container.innerHTML = `<p>No interviews scheduled for ${role}.</p>`;
+            return;
+          }
+
+          let tableHTML = `
+            <h3>${role.charAt(0).toUpperCase() + role.slice(1)} Interviews</h3>
+            <div id="messageBox" style="margin-bottom:10px;"></div>
+            <table>
+              <tr>
+                <th>Candidate Name</th>
+                <th>Interview Date</th>
+                <th>Time</th>
+                <th>Remark</th>
+                <th>Status</th>
+              </tr>
+          `;
+
+          data.forEach(item => {
+            const status = item.status || "Not Set";
+            const remarkId = `remark-${item.id}`;
+
+            tableHTML += `
+              <tr>
+                <td>${item.candidate_name}</td>
+                <td>${item.date}</td>
+                <td>${item.time}</td>
+                <td>
+                  <input type="text" class="remark-input" id="${remarkId}" value="${item.remark || ''}" placeholder="Enter remark" />
+                </td>
+                <td>
+                  <select onchange="updateStatus(${item.id}, this.value, '${remarkId}')">
+                    <option value="Not Set" ${status === "Not Set" ? "selected" : ""}>Not Set</option>
+                    <option value="Selected" ${status === "Selected" ? "selected" : ""}>Selected</option>
+                    <option value="Offered" ${status === "Offered" ? "selected" : ""}>Offered</option>
+                    <option value="Rejected" ${status === "Rejected" ? "selected" : ""}>Rejected</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          });
+
+          tableHTML += `</table>`;
+          container.innerHTML = tableHTML;
+        })
+        .catch(error => {
+          console.error("Error loading interviews:", error);
+          alert("Failed to load interview data.");
+        });
+    }
+
+    function updateStatus(scheduleId, newStatus, remarkInputId) {
+      const remark = document.getElementById(remarkInputId).value;
+
+      fetch(`/api/updatestatus/${scheduleId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          status: newStatus,
+          remark: remark
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const msgBox = document.getElementById("messageBox");
+        if (data.success) {
+          msgBox.innerHTML = "✅ Status updated successfully!";
+          msgBox.style.color = "green";
+
+          if (currentRole) {
+            loadInterviews(currentRole);
+          }
+        } else {
+          msgBox.innerHTML = "❌ Update failed: " + (data.error || "Unknown error");
+          msgBox.style.color = "red";
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        const msgBox = document.getElementById("messageBox");
+        msgBox.innerHTML = "❌ Failed to update status.";
+        msgBox.style.color = "red";
+      });
+    }
+  </script>
+</body>
+</html>

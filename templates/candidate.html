@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Candidate Details</title>
+  <style>
+    body {
+      background-color: #eaf6f7;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: #007c80;
+      color: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      width: 400px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .form-container p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 8px;
+      font-weight: 500;
+    }
+
+    input[type="datetime-local"], textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: white;
+      color: #007c80;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #c9f3f4;
+    }
+
+    .calendar-icon {
+      margin-left: 8px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <form method="POST" action="{% url 'candidate_schedule' role candidate.id %}">
+
+    {% csrf_token %}
+    <div class="form-container">
+      <h2>{{ role }} - {{ candidate.name }}</h2>
+      <p><strong>Contact:</strong> {{ candidate.contact }}</p>
+      <p><strong>Email:</strong> {{ candidate.mail_id }}</p>
+      <p><strong>Gender:</strong> {{ candidate.gender }}</p>
+      <p><strong>Experience:</strong> {{ candidate.experience }}</p>
+  
+      <label for="schedule">Scheduled On <span class="calendar-icon">📅</span></label>
+      <input type="datetime-local" id="schedule" name="schedule" required>
+  
+      <label for="remark">Remark</label>
+      <textarea id="remark" name="remark" required></textarea>
+  
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+  
+
+  <script>
+    function submitDetails() {
+      const schedule = document.getElementById('schedule').value;
+      const remark = document.getElementById('remark').value;
+      alert(`Scheduled on: ${schedule}\nRemark: ${remark}`);
+    }
+  </script>
+
+</body>
+</html>

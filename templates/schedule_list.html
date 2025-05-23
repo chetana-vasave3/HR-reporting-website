@@ -1,0 +1,62 @@
+<!-- templates/interview_schedule.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interview Schedule</title>
+</head>
+<body>
+
+    <select id="roleDropdown">
+      <option value="telecaller">Telecaller</option>
+      <option value="counselor">Counselor</option>
+      <!-- Add more roles as needed -->
+    </select>
+
+    <table id="scheduleTable" border="1">
+        <thead>
+            <tr>
+                <th>Candidate Name</th>
+                <th>Contact</th>
+                <th>Mail ID</th>
+                <th>Gender</th>
+                <th>Experience</th>
+                <th>Date & Time</th>
+                <th>Remark</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+      document.getElementById('roleDropdown').addEventListener('change', function() {
+        const role = this.value;
+
+        fetch(`/api/scheduledinterviews/${role}/`)
+          .then(response => response.json())
+          .then(data => {
+            const tableBody = document.querySelector('#scheduleTable tbody');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${item.candidate_name}</td>
+                <td>${item.contact}</td>
+                <td>${item.mail_id}</td>
+                <td>${item.gender}</td>
+                <td>${item.experience}</td>
+                <td>${item.date}</td>
+                <td>${item.remark}</td>
+              `;
+              tableBody.appendChild(row);
+            });
+          });
+      });
+
+      // Trigger fetch on initial load with default role
+      document.getElementById('roleDropdown').dispatchEvent(new Event('change'));
+    </script>
+
+</body>
+</html>

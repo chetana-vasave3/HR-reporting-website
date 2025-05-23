@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recruitment Dashboard</title>
+  <style>
+    body {
+      background-color: #f4fbfc;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #01595b;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .icon-box {
+      background-color: #007b7f;
+      border-radius: 12px;
+      padding: 30px;
+      width: 180px;
+      height: 160px;
+      color: white;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s;
+    }
+    .icon-box:hover {
+      background-color: #005f62;
+    }
+    .icon-box img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 10px;
+    }
+    .back-link {
+      margin-top: 40px;
+      display: inline-block;
+      color: #007b7f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Recruitment Dashboard</h1>
+  <div class="container">
+    <a href="{% url 'job_posts' %}" class="icon-box">
+      <img src="https://cdn-icons-png.flaticon.com/512/3502/3502680.png" alt="Job Posts">
+      <div>Job Posts</div>
+    </a>
+    <div class="container" >
+      <a href='{% url "scheduled_interview" %}' class="icon-box">
+      <img src="https://cdn-icons-png.flaticon.com/512/3472/3472620.png" alt="Interviews">
+      <div>Scheduled Interviews</div></a>
+    </div>
+    
+    <div class="container">
+      <a href="{% url 'offeres_roled_out' 'telecaller' %}" class="icon-box">
+  <img src="https://cdn-icons-png.flaticon.com/512/786/786205.png" alt="Offers">
+  <div>Offers</div>
+</a>
+    </div>
+    <div class="icon-box">
+      <img src="https://cdn-icons-png.flaticon.com/512/3039/3039436.png" alt="Report">
+      <div>Report</div>
+    </div>
+  </div>
+  
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+</body>
+</html>

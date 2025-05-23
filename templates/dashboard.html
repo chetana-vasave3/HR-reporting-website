@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <style>
+    body {
+      background-color: #eef8fb;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #024b4c;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 50px;
+    }
+    .icon-box {
+      background-color: #007b7f;
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .icon-box img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+    }
+    .icon-box:hover {
+      background-color: #026a6c;
+    }
+    .section {
+      display: none;
+      margin-top: 30px;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 10px;
+      margin: auto;
+    }
+    input {
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  {% include "header.html" %}
+
+  <div class="container"><h1>Welcome!</h1> </div>
+
+  <div class="container">
+    <div class="icon-box" onclick="showSection('placement')">
+      <img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" alt="Placement">
+      <div>Placement</div>
+    </div>
+
+    <a href="{% url 'recruitment' %}" class="icon-box">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Recruitment">
+      <div>Recruitment</div>
+    </a>
+
+    
+  </div>
+
+  <!-- Sections -->
+  <div id="placement" class="section">
+    <h2>Placement Status</h2>
+    <p>Track candidate placement and follow-up.</p>
+  </div>
+
+  <div id="addCompany" class="section">
+    <h2>Add New Company</h2>
+    <form onsubmit="addCompany(event)">
+      <input type="text" id="companyName" placeholder="Company Name" required><br>
+      <input type="text" id="jobRole" placeholder="Job Role" required><br>
+      <input type="text" id="location" placeholder="Location" required><br>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+
+  <div id="companyList" class="section">
+    <h2>Company List</h2>
+    <table id="companyTable">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Job Role</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function addCompany(event) {
+      event.preventDefault();
+      const name = document.getElementById('companyName').value;
+      const role = document.getElementById('jobRole').value;
+      const location = document.getElementById('location').value;
+
+      const table = document.getElementById('companyTable').getElementsByTagName('tbody')[0];
+      const newRow = table.insertRow();
+      newRow.innerHTML = `<td>${name}</td><td>${role}</td><td>${location}</td>`;
+
+      // Reset form and show list
+      event.target.reset();
+      showSection('companyList');
+    }
+  </script>
+
+</body>
+</html>
